@@ -1,0 +1,39 @@
+name: NowPlaying
+options:
+  bundleIdPrefix: com.nowplaying
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+targets:
+  NowPlaying:
+    type: application
+    platform: iOS
+    sources: [App, Shared]
+    dependencies:
+      - target: NowPlayingWidget
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: Now Playing
+        NSAppleMusicUsageDescription: Shows the song playing in Apple Music on your widget.
+        UILaunchScreen: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.nowplaying.widget
+        CODE_SIGN_ENTITLEMENTS: App/App.entitlements
+  NowPlayingWidget:
+    type: app-extension
+    platform: iOS
+    sources: [Widget, Shared]
+    info:
+      path: Widget/Info.plist
+      properties:
+        CFBundleDisplayName: Now Playing
+        NSAppleMusicUsageDescription: Shows the song playing in Apple Music on your widget.
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.nowplaying.widget.ext
+        CODE_SIGN_ENTITLEMENTS: Widget/Widget.entitlements
