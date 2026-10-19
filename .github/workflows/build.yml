@@ -7,6 +7,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: brew install xcodegen ldid
       - run: xcodegen
+      - run: ls -la && xcodebuild -list
       - run: >
           xcodebuild -project NowPlaying.xcodeproj -scheme NowPlaying -configuration Release
           -sdk iphoneos -derivedDataPath build
