@@ -1,0 +1,23 @@
+name: Build IPA
+on: [workflow_dispatch, push]
+jobs:
+  build:
+    runs-on: xcode-27   # if this label isn't available to you, try macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen ldid
+      - run: xcodegen
+      - run: >
+          xcodebuild -project NowPlaying.xcodeproj -scheme NowPlaying -configuration Release
+          -sdk iphoneos -derivedDataPath build
+          CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
+      - run: |
+          mkdir Payload
+          cp -R build/Build/Products/Release-iphoneos/NowPlaying.app Payload/
+          ldid -SApp/App.entitlements Payload/NowPlaying.app/NowPlaying
+          ldid -SWidget/Widget.entitlements Payload/NowPlaying.app/PlugIns/NowPlayingWidget.appex/NowPlayingWidget
+          zip -qr NowPlaying.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NowPlaying.ipa
+          path: NowPlaying.ipa
